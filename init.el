@@ -34,8 +34,7 @@ values."
      ;; My custom layers
      games
      react
-     (ranger :variables
-             ranger-show-preview t)
+     aj-javascript
      yaml
      auto-completion
      html
@@ -43,6 +42,8 @@ values."
      docker
      syntax-checking
      spell-checking
+     (ranger :variables
+             ranger-show-preview t)
      (markdown :variables
                markdown-live-preview-engine 'vmd)
      org
@@ -311,6 +312,7 @@ values."
   (setq javascript-indent-level n) ; javascript-mode
   (setq js-indent-level n) ; js-mode
   (setq js2-basic-offset n) ; js2-mode, in latest js2-mode, it's alias of js-indent-level
+  (setq react-indent-level n)
   (setq web-mode-markup-indent-offset n) ; web-mode, html tag in html file
   (setq web-mode-css-indent-offset n) ; web-mode, css in html file
   (setq web-mode-code-indent-offset n) ; web-mode, js code in html file
@@ -329,6 +331,12 @@ values."
     (when (and eslint (file-executable-p eslint))
       (setq-local flycheck-javascript-eslint-executable eslint))))
 
+;; My custom setting: rjsx auto closing tag
+(defun my/react-tag-fix ()
+  (define-key evil-insert-state-map (kbd "C-d") nil)
+  )
+
+
 (defun dotspacemacs/user-init ()
   "Initialization function for user code.
 It is called immediately after `dotspacemacs/init', before layer configuration
@@ -342,12 +350,11 @@ before packages are loaded. If you are unsure, you should try in setting them in
   (my/setup-indent 2)
   ;; My custom setting: having eslint using local setting
   (add-hook 'flycheck-mode-hook #'my/use-eslint-from-node-modules)
-  ;; My custom setting: html file associations
-  (add-to-list 'auto-mode-alist '("\\.mt$" . html-mode))
-  (add-to-list 'auto-mode-alist '("\\.js$" . react-mode))
   ;; My custom setting: link org-agenda files
   (setq org-agenda-files (list
                             "~/Workspace/my-org/agenda.org"))
+  ;; My custom setting: rjsx auto closing tag
+  (add-hook 'js-mode-hook 'my/react-tag-fix)
   )
 
 (defun dotspacemacs/user-config ()
@@ -359,6 +366,8 @@ explicitly specified that a variable should be set before a package is loaded,
 you should place your code here."
   ;; My custom setting: having auto-completion globally
   (global-company-mode t)
+  ;; My custom setting: file associations
+  (push '("\\.mt\\'" . html-mode) auto-mode-alist)
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -370,8 +379,7 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (dockerfile-mode docker tablist docker-tramp vmd-mode typit mmt pacmacs 2048-game org-projectile org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot ranger yaml-mode mmm-mode markdown-toc markdown-mode helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet auto-dictionary ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-mode tagedit smeargle slim-mode scss-mode sass-mode pug-mode orgit org magit-gitflow less-css-mode helm-gitignore helm-css-scss haml-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor emmet-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme)))
- )
+    (rjsx-mode eslintd-fix add-node-modules-path dockerfile-mode docker tablist docker-tramp vmd-mode typit mmt pacmacs 2048-game org-projectile org-present org-pomodoro alert log4e gntp org-download htmlize gnuplot ranger yaml-mode mmm-mode markdown-toc markdown-mode helm-company helm-c-yasnippet git-gutter-fringe+ git-gutter-fringe fringe-helper git-gutter+ git-gutter gh-md flyspell-correct-helm flyspell-correct flycheck-pos-tip pos-tip flycheck diff-hl company-web web-completion-data company-tern dash-functional tern company-statistics company auto-yasnippet auto-dictionary ac-ispell auto-complete reveal-in-osx-finder pbcopy osx-trash osx-dictionary launchctl xterm-color shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-mode tagedit smeargle slim-mode scss-mode sass-mode pug-mode orgit org magit-gitflow less-css-mode helm-gitignore helm-css-scss haml-mode gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link evil-magit magit magit-popup git-commit with-editor emmet-mode web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor yasnippet multiple-cursors js2-mode js-doc coffee-mode ws-butler window-numbering which-key volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-themes helm-swoop helm-projectile helm-mode-manager helm-make projectile pkg-info epl helm-flx helm-descbinds helm-ag google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump f s diminish define-word column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash aggressive-indent adaptive-wrap ace-window ace-link ace-jump-helm-line helm avy helm-core popup async quelpa package-build spacemacs-theme))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
