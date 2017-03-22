@@ -348,6 +348,8 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   ;; My custom setting: going into distraction-free mode when opened
   (add-hook 'window-setup-hook 'toggle-frame-fullscreen t)
+  ;; My custom setting: make magit status fullscreen
+  (setq-default git-magit-status-fullscreen t)
   ;; My custom setting: having indention 2 for some files
   (my/setup-indent 2)
   ;; My custom setting: having eslint using local setting
