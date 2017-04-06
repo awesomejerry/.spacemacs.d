@@ -379,7 +379,7 @@ you should place your code here."
   (push '("\\.mt\\'" . mustache-mode) auto-mode-alist)
   ;; My custom setting: relative line number default
   (with-eval-after-load 'linum
-    (linum-relative-toggle))
+    (linum-relative-global-mode))
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
